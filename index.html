@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>I Love You — A Little Heart Story</title>
+
+  <!-- Poppins font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       MUSIC CONTROL
+       Autoplay is blocked by browsers until a user gesture happens,
+       so we simply expose a small toggle button. Music is optional:
+       if assets/music.mp3 is missing the button still works, it just
+       won't produce sound (the <audio> element fails silently).
+  ============================================================ -->
+  <button id="music-toggle" class="music-btn" aria-label="Play background music">
+    <span id="music-icon">▶</span> <span id="music-label">Play Music</span>
+  </button>
+  <audio id="bg-music" src="assets/music.mp3" loop preload="none"></audio>
+
+  <!-- ============================================================
+       STAGE
+       Everything centers inside this stage. It holds three layers:
+       1. background floating hearts (ambient, infinite)
+       2. the character (left) + hearts container (particles + final heart)
+       3. the "I Love You" text, revealed at the end
+  ============================================================ -->
+  <main class="stage">
+
+    <!-- Layer 1: ambient floating hearts, purely decorative -->
+    <div id="bg-floaters" class="bg-floaters" aria-hidden="true"></div>
+
+    <!-- Reusable heart shape, cloned via <use> for every particle (fast, no per-node path data) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <symbol id="heart-symbol" viewBox="0 0 32 29">
+          <path d="M16 28
+                   C 16 28, 1 18.5, 1 9.2
+                   C 1 3.5, 5.4 0, 10 0
+                   C 13 0, 15 1.6, 16 4
+                   C 17 1.6, 19 0, 22 0
+                   C 26.6 0, 31 3.5, 31 9.2
+                   C 31 18.5, 16 28, 16 28 Z" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <div class="scene">
+
+      <!-- ==========================================================
+           CHARACTER
+           Inlined (not <img src="assets/character.svg">) so script.js
+           can reach into the DOM and animate each path's
+           stroke-dasharray / stroke-dashoffset directly.
+      ========================================================== -->
+      <div class="character-wrap">
+        <img id="character" src="286b58618e81d885e270cc2f362f6e47.jpg" alt="Character" style="width: 100%; height: 100%; object-fit: contain;" />
+        <!-- Finger point - adjust the position to match where the finger is in your image -->
+        <div id="char-hand" style="position: absolute; right: 10%; top: 60%; width: 10px; height: 10px; opacity: 0;"></div>
+      </div>
+
+      <!-- ==========================================================
+           HEARTS
+           script.js fills this with:
+             - flying particle hearts (<use> clones of #heart-symbol)
+             - tiny fading sparkle hearts
+             - soft glow blobs
+      ========================================================== -->
+      <svg id="hearts-container" class="hearts-container" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg"></svg>
+
+      <!-- ==========================================================
+           FINAL TEXT
+      ========================================================== -->
+      <h1 id="love-text" class="love-text">I Love You <span class="heart-glyph">❤</span></h1>
+
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

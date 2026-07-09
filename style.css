@@ -1,0 +1,331 @@
+/* =========================================================================
+   ROOT / RESET
+========================================================================= */
+:root {
+  --bg-navy: #0f172a;
+  --white: #f8fafc;
+  --heart-red: #ff4d6d;
+  --heart-red-soft: #ff8fa3;
+  --glow: rgba(255, 77, 109, 0.55);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background: #ffffff;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden; /* the whole experience lives in one still viewport */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* =========================================================================
+   STAGE — centers everything, desktop / tablet / mobile alike
+========================================================================= */
+.stage {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scene {
+  position: relative;
+  width: min(1000px, 92vw);
+  height: min(640px, 92vh);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================================================
+   CHARACTER
+========================================================================= */
+.character-wrap {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) scale(0.85);
+  width: 300px;
+  height: 300px;
+  z-index: 3;
+}
+
+#character {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Paths start fully hidden — script.js measures each path's real length
+   and sets --len via inline style, then animates stroke-dashoffset to 0 */
+.draw-path {
+  stroke-dasharray: var(--len, 1000);
+  stroke-dashoffset: var(--len, 1000);
+}
+
+.blink-lash {
+  transition: opacity 0.08s ease;
+}
+
+.blush {
+  transition: opacity 0.6s ease;
+}
+
+/* Idle bounce + wave, applied by JS once the intro finishes */
+.character-bounce {
+  animation: bounce 1.6s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(-50%) scale(0.85) translateY(0); }
+  50%      { transform: translateY(-50%) scale(0.85) translateY(-10px); }
+}
+
+.character-wave #char-arm {
+  animation: wave 1.8s ease-in-out infinite;
+  transform-origin: 195px 165px;
+}
+
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(-6deg); }
+  75%      { transform: rotate(6deg); }
+}
+
+/* =========================================================================
+   HEARTS CONTAINER — flying particles + assembled heart
+========================================================================= */
+.hearts-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Each flying heart particle (an SVG <use> of #heart-symbol) */
+.heart-particle {
+  fill: var(--heart-red);
+  opacity: 0;
+  filter: drop-shadow(0 0 6px var(--glow));
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform 0.9s cubic-bezier(0.16, 0.85, 0.28, 1),
+    opacity 0.4s ease-out;
+}
+
+.heart-particle.flying {
+  opacity: 1;
+}
+
+.heart-particle.landed {
+  animation: pulse-heart 2s ease-in-out infinite;
+}
+
+@keyframes pulse-heart {
+  0%, 100% { filter: drop-shadow(0 0 6px var(--glow)) brightness(1); }
+  50%      { filter: drop-shadow(0 0 14px var(--glow)) brightness(1.18); }
+}
+
+/* Tiny sparkle hearts that fade away mid-flight, purely decorative */
+.sparkle-heart {
+  fill: var(--heart-red-soft);
+  opacity: 0;
+  pointer-events: none;
+  animation: sparkle-fade 1.1s ease-out forwards;
+}
+
+@keyframes sparkle-fade {
+  0%   { opacity: 0;   transform: scale(0.2) translateY(0); }
+  30%  { opacity: 0.9; }
+  100% { opacity: 0;   transform: scale(0.6) translateY(-26px); }
+}
+
+/* Soft glow blob trailing the launch point */
+.glow-particle {
+  fill: var(--heart-red);
+  opacity: 0;
+  filter: blur(4px);
+  animation: glow-fade 0.7s ease-out forwards;
+}
+
+@keyframes glow-fade {
+  0%   { opacity: 0.55; transform: scale(0.6); }
+  100% { opacity: 0;    transform: scale(1.6); }
+}
+
+/* =========================================================================
+   AMBIENT BACKGROUND FLOATERS — small hearts drifting up forever
+========================================================================= */
+.bg-floaters {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bg-floater {
+  position: absolute;
+  bottom: -40px;
+  fill: var(--heart-red-soft);
+  opacity: 0;
+  animation-name: float-up;
+  animation-timing-function: ease-in;
+  animation-iteration-count: infinite;
+}
+
+@keyframes float-up {
+  0%   { opacity: 0;    transform: translateY(0) translateX(0) rotate(0deg); }
+  10%  { opacity: 0.35; }
+  90%  { opacity: 0.2; }
+  100% { opacity: 0;    transform: translateY(-115vh) translateX(var(--drift, 20px)) rotate(20deg); }
+}
+
+/* =========================================================================
+   FINAL TEXT
+========================================================================= */
+.love-text {
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  transform: translate(-50%, 18px);
+  z-index: 4;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  color: var(--heart-red);
+  text-align: center;
+  opacity: 0;
+  white-space: nowrap;
+  text-shadow: 0 0 24px var(--glow);
+  transition: opacity 1.1s ease, transform 1.1s ease;
+}
+
+.love-text.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.heart-glyph {
+  display: inline-block;
+}
+
+.love-text.sparkle-once .heart-glyph {
+  animation: text-sparkle 0.9s ease;
+}
+
+@keyframes text-sparkle {
+  0%   { transform: scale(1);    filter: drop-shadow(0 0 0 var(--glow)); }
+  40%  { transform: scale(1.35); filter: drop-shadow(0 0 18px var(--glow)); }
+  100% { transform: scale(1);    filter: drop-shadow(0 0 0 var(--glow)); }
+}
+
+/* =========================================================================
+   MUSIC BUTTON
+========================================================================= */
+.music-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.music-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.music-btn:active {
+  transform: translateY(0);
+}
+
+/* =========================================================================
+   RESPONSIVE
+========================================================================= */
+@media (max-width: 900px) {
+  .character-wrap {
+    width: 220px;
+    height: 220px;
+    transform: translateY(-50%) scale(0.75);
+  }
+}
+
+@media (max-width: 640px) {
+  body { overflow-y: auto; }
+
+  .scene {
+    width: 96vw;
+    height: 88vh;
+  }
+
+  .character-wrap {
+    left: 50%;
+    top: 8%;
+    transform: translate(-50%, 0) scale(0.6);
+  }
+
+  .character-bounce {
+    animation-name: bounce-mobile;
+  }
+
+  @keyframes bounce-mobile {
+    0%, 100% { transform: translate(-50%, 0) scale(0.6) translateY(0); }
+    50%      { transform: translate(-50%, 0) scale(0.6) translateY(-8px); }
+  }
+
+  .love-text {
+    bottom: 4%;
+    white-space: normal;
+  }
+
+  .music-btn {
+    top: 12px;
+    right: 12px;
+    padding: 8px 12px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .heart-particle,
+  .love-text,
+  .character-bounce,
+  .character-wave #char-arm,
+  .bg-floater {
+    animation: none !important;
+    transition: opacity 0.3s ease !important;
+  }
+}
