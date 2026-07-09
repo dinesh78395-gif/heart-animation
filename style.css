@@ -68,6 +68,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: visible;
+  border-radius: 12px;
 }
 
 /* Paths start fully hidden — script.js measures each path's real length
@@ -276,24 +277,39 @@ body {
 ========================================================================= */
 @media (max-width: 900px) {
   .character-wrap {
-    width: 220px;
-    height: 220px;
-    transform: translateY(-50%) scale(0.75);
+    width: 200px;
+    height: 200px;
+    transform: translateY(-50%) scale(0.8);
+  }
+  
+  .scene {
+    width: 95vw;
+    height: 90vh;
   }
 }
 
 @media (max-width: 640px) {
-  body { overflow-y: auto; }
+  body { 
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 
   .scene {
-    width: 96vw;
-    height: 88vh;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 60px;
   }
 
   .character-wrap {
-    left: 50%;
-    top: 8%;
-    transform: translate(-50%, 0) scale(0.6);
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 20px;
   }
 
   .character-bounce {
@@ -301,13 +317,26 @@ body {
   }
 
   @keyframes bounce-mobile {
-    0%, 100% { transform: translate(-50%, 0) scale(0.6) translateY(0); }
-    50%      { transform: translate(-50%, 0) scale(0.6) translateY(-8px); }
+    0%, 100% { transform: scale(1) translateY(0); }
+    50%      { transform: scale(1) translateY(-8px); }
+  }
+  
+  .hearts-container {
+    position: absolute;
+    top: 240px;
+    left: 0;
+    right: 0;
+    height: calc(100vh - 240px);
   }
 
   .love-text {
-    bottom: 4%;
+    position: fixed;
+    bottom: 8%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    font-size: clamp(1.3rem, 6vw, 2rem);
     white-space: normal;
+    max-width: 90%;
   }
 
   .music-btn {
@@ -315,6 +344,31 @@ body {
     right: 12px;
     padding: 8px 12px;
     font-size: 0.75rem;
+  }
+  
+  .bg-floaters {
+    display: none; /* Hide background floaters on mobile for better performance */
+  }
+}
+
+@media (max-width: 400px) {
+  .character-wrap {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .scene {
+    padding-top: 40px;
+  }
+  
+  .hearts-container {
+    top: 200px;
+    height: calc(100vh - 200px);
+  }
+  
+  .love-text {
+    font-size: clamp(1.1rem, 5vw, 1.6rem);
+    bottom: 6%;
   }
 }
 

@@ -37,6 +37,26 @@ const CONFIG = {
   },
 };
 
+// Adjust configuration for mobile
+function adjustForMobile() {
+  if (window.innerWidth <= 640) {
+    CONFIG.particleCount = 300;
+    CONFIG.heartWidthPx = 280;
+    CONFIG.heartHeightPx = 240;
+    CONFIG.heartCenter = { x: 450, y: 280 };
+    CONFIG.particleMinSizePx = 12;
+    CONFIG.particleMaxSizePx = 20;
+    CONFIG.bgFloaterCount = 0; // Disable for performance
+  } else if (window.innerWidth <= 900) {
+    CONFIG.particleCount = 400;
+    CONFIG.heartWidthPx = 350;
+    CONFIG.heartHeightPx = 300;
+    CONFIG.heartCenter = { x: 480, y: 290 };
+  }
+}
+
+adjustForMobile();
+
 /* =========================================================================
    HEART MATH
    Classic parametric heart curve:
